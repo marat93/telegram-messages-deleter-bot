@@ -8,3 +8,4 @@ services:
     command: bin/bot
     stdin_open: true
     tty: true
+    restart: on-failure:3
