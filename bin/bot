@@ -4,17 +4,24 @@ require 'telegram/bot'
 
 require './lib/message_deleter'
 require './lib/app_configurator'
+require './lib/exception_notifier'
 
-config = AppConfigurator.new
-token = config.get_token
-logger = config.get_logger
+begin
+  config = AppConfigurator.new
+  token = config.get_token
+  logger = config.get_logger
+  raise StandardError
+  logger.debug 'Starting telegram bot'
 
-logger.debug 'Starting telegram bot'
+  Telegram::Bot::Client.run(token) do |bot|
+    bot.listen do |message|
+      options = {bot: bot, message: message}
 
-Telegram::Bot::Client.run(token) do |bot|
-  bot.listen do |message|
-    options = {bot: bot, message: message}
-
-    MessageDeleter.new(options, logger).delete
+      MessageDeleter.new(options, logger).delete
+    end
   end
+
+rescue Exception => e
+  ExceptionNotifier.new(e).notify
+  raise e
 end

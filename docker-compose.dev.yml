@@ -6,6 +6,10 @@ services:
     volumes:
       - "./:/app"
     command: bin/bot
+    environment:
+      - MAILGUN_API_KEY=${MAILGUN_API_KEY}
+      - MAILGUN_DOMAIN_NAME=${MAILGUN_DOMAIN_NAME}
+      - EXCEPTION_NOTIFIER_RECEIVER=${EXCEPTION_NOTIFIER_RECEIVER}
+    restart: on-failure:3
     stdin_open: true
     tty: true
-    restart: on-failure:3
