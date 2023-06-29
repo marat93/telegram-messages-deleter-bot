@@ -1,9 +1,8 @@
 require 'logger'
-require 'yaml'
 
 class AppConfigurator
   def get_token
-    YAML::load(IO.read('config/secrets.yml'))['telegram_bot_token']
+    ENV.fetch('TELEGRAM_BOT_TOKEN')
   end
 
   def get_logger

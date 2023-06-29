@@ -7,6 +7,7 @@ services:
       - "./:/app"
     command: bin/bot
     environment:
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
       - MAILGUN_API_KEY=${MAILGUN_API_KEY}
       - MAILGUN_DOMAIN_NAME=${MAILGUN_DOMAIN_NAME}
       - EXCEPTION_NOTIFIER_RECEIVER=${EXCEPTION_NOTIFIER_RECEIVER}
