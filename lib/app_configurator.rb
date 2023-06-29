@@ -1,4 +1,4 @@
-require 'logger'
+require 'logging'
 
 class AppConfigurator
   def get_token
@@ -6,6 +6,15 @@ class AppConfigurator
   end
 
   def get_logger
-    Logger.new(STDOUT)
+    logger = Logging.logger['Bot']
+    layout = Logging.layouts.pattern \
+      :pattern      => '[%d] %-5l %c: %m\n',
+      :date_pattern => '%Y-%m-%d %H:%M:%S'
+
+    logger.add_appenders \
+      Logging.appenders.stdout(layout: layout),
+      Logging.appenders.file('logs/bot.log', layout: layout)
+
+    logger
   end
 end
