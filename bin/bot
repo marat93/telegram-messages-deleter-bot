@@ -2,12 +2,15 @@
 
 require 'telegram/bot'
 
-require './lib/message_deleter'
 require './lib/app_configurator'
+require './lib/message_deleter'
+require './lib/message_sender'
 require './lib/exception_notifier'
 
 begin
   config = AppConfigurator.new
+  config.configure
+
   token = config.get_token
   logger = config.get_logger
 

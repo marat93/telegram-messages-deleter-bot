@@ -5,7 +5,7 @@ class ExceptionNotifier
     @exception = exception
     @api_key = ENV.fetch('MAILGUN_API_KEY')
     @domain_name = ENV.fetch('MAILGUN_DOMAIN_NAME')
-    @receiever_email = ENV.fetch('EXCEPTION_NOTIFIER_RECEIVER')
+    @receiever_email = ENV.fetch('EXCEPTION_NOTIFIER_RECEIVER_EMAIL')
   end
 
   def notify

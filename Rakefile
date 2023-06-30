@@ -1,34 +1,29 @@
 require 'rubygems'
 require 'bundler/setup'
 
-require 'pg'
 require 'active_record'
 require 'yaml'
 
 namespace :db do
+  def db_config
+    connection.db_config
+  end
 
-  desc 'Migrate the database'
+  def connection
+    connection_details = YAML::load(File.open('config/database.yml'))
+    @connection ||= ActiveRecord::Base.establish_connection(connection_details)
+  end
+
+  desc "Migrate the database"
   task :migrate do
-    connection_details = YAML::load(File.open('config/database.yml'))
-    ActiveRecord::Base.establish_connection(connection_details)
-    ActiveRecord::Migration.migrate('db/migrate/')
+    connection
+    ActiveRecord::MigrationContext.new('db/migrate').migrate
+    Rake::Task["db:schema"].invoke
   end
 
-  desc 'Create the database'
-  task :create do
-    connection_details = YAML::load(File.open('config/database.yml'))
-    admin_connection = connection_details.merge({'database'=> 'postgres',
-                                                'schema_search_path'=> 'public'})
-    ActiveRecord::Base.establish_connection(admin_connection)
-    ActiveRecord::Base.connection.create_database(connection_details.fetch('database'))
-  end
-
-  desc 'Drop the database'
-  task :drop do
-    connection_details = YAML::load(File.open('config/database.yml'))
-    admin_connection = connection_details.merge({'database'=> 'postgres',
-                                                'schema_search_path'=> 'public'})
-    ActiveRecord::Base.establish_connection(admin_connection)
-    ActiveRecord::Base.connection.drop_database(connection_details.fetch('database'))
+  desc 'Create a db/schema.rb file that is portable against any DB supported by AR'
+  task :schema do
+    ActiveRecord::Tasks::DatabaseTasks.db_dir = './db'
+    ActiveRecord::Tasks::DatabaseTasks.dump_schema(db_config)
   end
 end
