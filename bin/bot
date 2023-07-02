@@ -20,6 +20,9 @@ begin
     bot.listen do |message|
       options = {bot: bot, message: message}
 
+      sender_name = message.chat.id > 0 ? message.from.username : message.chat.title
+      logger.debug "Received a message from #{sender_name}(#{message.chat.id})"
+
       MessageDeleter.new(options, logger).delete
       MessageResponder.new(options, logger).respond
     end
