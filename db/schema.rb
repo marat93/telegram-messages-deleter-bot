@@ -12,8 +12,8 @@
 
 ActiveRecord::Schema[7.0].define(version: 1) do
   create_table "users", force: :cascade do |t|
-    t.integer "user_id", null: false
-    t.integer "group_id", null: false
+    t.string "user_id", null: false
+    t.string "group_id", null: false
     t.index ["user_id", "group_id"], name: "index_users_on_user_id_and_group_id", unique: true
   end
 
