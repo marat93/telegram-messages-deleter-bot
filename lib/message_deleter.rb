@@ -14,11 +14,11 @@ class MessageDeleter
 
       message.new_chat_members.each do |new_member|
         delete_message(new_member)
-        notify_subscribed_users(new_member)
+        notify_subscribed_users_on_success(new_member)
+      rescue Telegram::Bot::Exceptions::ResponseError => e
+        logger.error("Error when deleting the message: #{e.message}")
+        notify_subscribed_users_on_fail(new_member)
       end
-
-    rescue Telegram::Bot::Exceptions::ResponseError => e
-      logger.error("Error when deleting the message: #{e.message}")
     end
 
     private
@@ -33,9 +33,15 @@ class MessageDeleter
       logger.info("Message ##{message.message_id} deleted")
     end
 
-    def notify_subscribed_users(new_member)
+    def notify_subscribed_users_on_success(new_member)
       users_to_notify.each do |user|
-        message_user(user, "Deleted message ##{message.message_id} about #{new_member.first_name} #{new_member.last_name} (@#{new_member.username}) joining the group '#{message.chat.title}'")
+        message_user(user, "✅ Deleted message ##{message.message_id} about #{new_member.first_name} #{new_member.last_name} (@#{new_member.username}) joining the group '#{message.chat.title}'")
+      end
+    end
+
+    def notify_subscribed_users_on_fail(new_member)
+      users_to_notify.each do |user|
+        message_user(user, "🚨 Couldn't delete message ##{message.message_id} about #{new_member.first_name} #{new_member.last_name} (@#{new_member.username}) joining the group '#{message.chat.title}'")
       end
     end
 
