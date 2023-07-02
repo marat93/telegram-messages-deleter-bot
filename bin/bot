@@ -4,7 +4,7 @@ require 'telegram/bot'
 
 require './lib/app_configurator'
 require './lib/message_deleter'
-require './lib/message_sender'
+require './lib/message_responder'
 require './lib/exception_notifier'
 
 begin
@@ -21,6 +21,7 @@ begin
       options = {bot: bot, message: message}
 
       MessageDeleter.new(options, logger).delete
+      MessageResponder.new(options, logger).respond
     end
   end
 
