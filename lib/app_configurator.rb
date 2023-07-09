@@ -4,6 +4,7 @@ require './lib/database_connector'
 
 class AppConfigurator
   def configure
+    setup_i18n
     setup_database
   end
 
@@ -25,6 +26,12 @@ class AppConfigurator
   end
 
   private
+
+  def setup_i18n
+    I18n.load_path = Dir['config/locales.yml']
+    I18n.locale = :ru
+    I18n.backend.load_translations
+  end
 
   def setup_database
     DatabaseConnector.establish_connection(get_logger('database'))

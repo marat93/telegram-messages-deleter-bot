@@ -1,0 +1,9 @@
+ru:
+  user_joined:
+    by_someone: '[%{initiator_name}](tg://user?id=%{initiator_id}) пригласил(а) [%{added_user_name}](tg://user?id=%{added_user_id})'
+    via_invite_link:
+      primary: '[%{joined_user_name}](tg://user?id=%{joined_user_id}) вступил(а) в группу по основной ссылке-приглашению'
+      additional: '[%{joined_user_name}](tg://user?id=%{joined_user_id}) вступил(а) в группу по ссылке-приглашению "%{invite_link_name}", которая была создана [%{invite_link_creator_name}](tg://user?id=%{invite_link_creator_id})'
+  message_deleted:
+    successfully: "✅ Удалено сообщение #%{message_id} о вступлении [%{user_name}](tg://user?id=%{user_id}) в группу '%{chat_name}'"
+    unsuccessfully: "🚨 Не удалось удалить сообщение #%{message_id} о вступлении [%{user_name}](tg://user?id=%{user_id}) в группу '%{chat_name}'"

@@ -15,8 +15,6 @@ class MessageResponder
   def respond
     return unless message.instance_of?(Telegram::Bot::Types::Message)
 
-    @logger.info("Received a message: #{message}")
-
     on /^\/start group-id-"(.*)"/ do |group_id|
       register_receiver(group_id)
     end

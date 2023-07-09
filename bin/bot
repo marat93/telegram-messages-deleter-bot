@@ -3,9 +3,11 @@
 require 'telegram/bot'
 
 require './lib/app_configurator'
+require './lib/user_joined_notifier'
 require './lib/message_deleter'
 require './lib/message_responder'
 require './lib/exception_notifier'
+require './lib/telegram/bot/types/chat_member.rb'
 
 begin
   config = AppConfigurator.new
@@ -16,14 +18,15 @@ begin
 
   logger.info 'Starting telegram bot'
 
-  Telegram::Bot::Client.run(token) do |bot|
+  Telegram::Bot::Client.run(token, { allowed_updates: ['message', 'chat_member'] }) do |bot|
     bot.listen do |message|
       options = {bot: bot, message: message}
 
       sender_name = message.chat.id > 0 ? message.from.username : message.chat.title
       logger.debug "Received a message from #{sender_name}(#{message.chat.id})"
 
-      MessageDeleter.new(options, logger).delete
+      UserJoinedNotifier.new(message, bot, logger).call
+      MessageDeleter.new(message, bot, logger).delete
       MessageResponder.new(options, logger).respond
     end
   end
